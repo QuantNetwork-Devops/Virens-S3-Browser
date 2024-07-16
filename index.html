@@ -39,10 +39,10 @@
         const API_DATA_EXTRACTION_ENDPOINT = 'https://p0dxii3oa7.execute-api.eu-west-2.amazonaws.com/listBucketObjects'
         let items = []
 
-        const bucketName = import.meta.env.VITE_BUCKET_NAME
-        console.log(bucketName)
-        const filePath = import.meta.env.VITE_BUCKET_PATH
-        console.log(filePath)
+        // const bucketName = import.meta.env.VITE_BUCKET_NAME
+        // console.log(bucketName)
+        // const filePath = import.meta.env.VITE_BUCKET_PATH
+        // console.log(filePath)
         const table = new Vue({
           el: "#app",
           methods: {
@@ -57,7 +57,7 @@
                   for( let i in response_data){
                     let obj = {}
                     let urlPath = response_data[i].Key
-                    let name = urlPath.replace(`${filePath}`, '');
+                    let name = urlPath.replace(this.filePath, '');
                     
                     let fileSizeinBytes = response_data[i].Size.toString()
                     let fileSize = ``
@@ -93,8 +93,8 @@
           data: {
             headers: ['File Name', 'File Size', 'Last Modified(date/time)'],
             items: items,
-            bucketName: `${bucketName}`,
-            filePath: `${filePath}`
+            bucketName: `${import.meta.env.VITE_BUCKET_NAME}`,
+            filePath: `${import.meta.env.VITE_BUCKET_PATH}`
           }
             
         })
