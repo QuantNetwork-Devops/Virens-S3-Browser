@@ -8,7 +8,7 @@ frontend:
       commands:
         - echo "VITE_BUCKET_NAME=$VITE_BUCKET_NAME" >> .env
         - echo "VITE_BUCKET_PATH=$VITE_BUCKET_PATH" >> .env
-        - echo .env
+        - cat .env
         - npm run build
   artifacts:
     baseDirectory: dist
