@@ -49,6 +49,8 @@
               updateTable: async function (e) {
                   console.log('create table')
                   // Get the presigned URL
+
+                  console.log(this.bucketName + ' ' + this.filePath);
                   const response_data = await axios({
                       method: 'GET',
                       url: `${API_DATA_EXTRACTION_ENDPOINT}?bucketName=${encodeURIComponent(this.bucketName)}&filePath=${encodeURIComponent(this.filePath)}`
