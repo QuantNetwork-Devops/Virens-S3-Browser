@@ -40,8 +40,9 @@
         let items = []
 
         const bucketName = import.meta.env.VITE_BUCKET_NAME
+        console.log(bucketName)
         const filePath = import.meta.env.VITE_BUCKET_PATH
-
+        console.log(filePath)
         const table = new Vue({
           el: "#app",
           methods: {
