@@ -35,9 +35,12 @@
       </div>
     </div>
 
-    <script>
+    <script type="module">
         const API_DATA_EXTRACTION_ENDPOINT = 'https://p0dxii3oa7.execute-api.eu-west-2.amazonaws.com/listBucketObjects'
         let items = []
+
+        const bucketName = import.meta.env.VITE_BUCKET_NAME
+        const filePath = import.meta.env.VITE_BUCKET_PATH
 
         const table = new Vue({
           el: "#app",
@@ -45,15 +48,15 @@
               updateTable: async function (e) {
                   console.log('create table')
                   // Get the presigned URL
-                  response_data = await axios({
+                  const response_data = await axios({
                       method: 'GET',
                       url: `${API_DATA_EXTRACTION_ENDPOINT}?bucketName=${encodeURIComponent(this.bucketName)}&filePath=${encodeURIComponent(this.filePath)}`
                   })
                   //console.log('response_data: ', response_data)
-                  for( i in response_data){
+                  for( let i in response_data){
                     let obj = {}
                     let urlPath = response_data[i].Key
-                    let name = urlPath.replace(`${BANK_PATH}`, '');
+                    let name = urlPath.replace(`${filePath}`, '');
                     
                     let fileSizeinBytes = response_data[i].Size.toString()
                     let fileSize = ``
@@ -89,8 +92,8 @@
           data: {
             headers: ['File Name', 'File Size', 'Last Modified(date/time)'],
             items: items,
-            bucketName: `${BANK_BUCKET}`,
-            filePath: `${BANK_PATH}`
+            bucketName: `${bucketName}`,
+            filePath: `${filePath}`
           }
             
         })

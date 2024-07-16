@@ -6,8 +6,8 @@ frontend:
         - npm ci --cache .npm --prefer-offline
     build:
       commands:
-        - echo "BANK_BUCKET=$BANK_BUCKET" >> .env
-        - echo "BANK_PATH=$BANK_PATH" >> .env
+        - echo "VITE_BUCKET_NAME=$VITE_BUCKET_NAME" >> .env
+        - echo "VITE_BUCKET_PATH=$VITE_BUCKET_PATH" >> .env
         - npm run build
   artifacts:
     baseDirectory: dist
