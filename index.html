@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DXC Card Network Application File Viewer</title>
+    <script src="https://unpkg.com/vue@1.0.28/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios@0.2.1/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>DXC Card Network Application File Viewer</h1>
+      <h2>Atlas Dataset A</h2>
+      <div>
+        <table id="S3Table">
+          <thead>      
+            <tr>
+              <th  v-for="header in headers">
+                {{header}}
+              </th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr v-if="items.length === 0">
+              <td></td>
+            </tr>
+            <tr v-else v-for="item in items">
+              <td>{{item.name}}</td>
+              <td>{{item.size}}</td>
+              <td>{{item.last_modified}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <!-- <button v-if="!uploadURL" @click="updateTable">Refresh</button> -->
+      </div>
+    </div>
+
+    <script>
+        const API_ENDPOINT = 'https://p0dxii3oa7.execute-api.eu-west-2.amazonaws.com/listBucketObjects'
+        const BANK_PATH = 'banks/atlas/'
+
+        let items = []
+
+        const table = new Vue({
+          el: "#app",
+          methods: {
+              updateTable: async function (e) {
+                  console.log('create table')
+                  // Get the presigned URL
+                  response = await axios({
+                      method: 'GET',
+                      url: `${API_ENDPOINT}`
+                  })
+                  //console.log('Response: ', response)
+                  for( i in response){
+                    let obj = {}
+                    let urlPath = response[i].Key
+                    let name = urlPath.replace(`${BANK_PATH}`, '');
+                    
+                    let fileSizeinBytes = response[i].Size.toString()
+                    let fileSize = ``
+                    if(fileSizeinBytes.length < 4) {
+                      fileSize = `${fileSizeinBytes}B`
+                    }
+                    else if(fileSizeinBytes.length < 7) {
+                      fileSize = `${(fileSizeinBytes/1024).toFixed(2)}KB`
+                    }
+                    else if(fileSizeinBytes.length < 10){
+                      fileSize = `${((fileSize/1024)/1024).toFixed(2)}MB`
+                    }
+                    else{
+                      fileSize = `${(((fileSize/1024)/1024)/1024).toFixed(2)}GB`
+                    }
+
+                    let date_and_time = response[i].LastModified;    
+                    date_and_time = date_and_time.replace("-", "/");
+                    date_and_time = date_and_time.replace("-", "/");
+                    date_and_time = date_and_time.replace("T", " ");
+                    date_and_time = date_and_time.replace(".000Z", " ");
+
+                    obj.name = name
+                    obj.url = urlPath
+                    obj.size = fileSize
+                    obj.last_modified = date_and_time
+
+                    this.items.push(obj)
+                  }
+              },
+          },
+
+          data: {
+            headers: ['File Name', 'File Size', 'Last Modified(date/time)'],
+            items: items
+          }
+            
+        })
+
+        table.updateTable();
+
+    </script>
+    <style type="text/css">
+        body {
+          background: #20262E;
+          padding: 20px;
+          font-family: sans-serif;
+        }
+        #app {
+          background: #fff;
+          border-radius: 4px;
+          padding: 20px;
+          transition: all 0.2s;
+          text-align: center;
+        }
+        #logo {
+          width: 100px;
+        }
+        h2 {
+          font-weight: bold;
+          margin-bottom: 15px;
+        }
+        h1, h2 {
+          font-weight: normal;
+          margin-bottom: 15px;
+        }
+        a {
+          color: #494b4a;
+        }
+        img {
+          width: 30%;
+          margin: auto;
+          display: block;
+          margin-bottom: 10px;
+        }
+        #S3Table {
+          font-family: Arial, Helvetica, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        #S3Table td, #S3Table th {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+
+        #S3Table tr:nth-child(even){background-color: #f2f2f2;}
+
+        #S3Table tr:hover {background-color: #ddd;}
+
+        #S3Table th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #20262E;
+          color: white;
+        }
+      </style>
+    </body>
+  </html>
