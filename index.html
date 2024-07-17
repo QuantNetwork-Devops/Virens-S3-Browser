@@ -22,7 +22,7 @@
             <tr v-if="items.length === 0">
               <td></td>
             </tr>
-            <tr v-else v-for="item in items">
+            <tr v-else v-for="item in items" :key="item.url" v-on:click="downloadFile(item.url)">
               <td>{{item.name}}</td>
               <td>{{item.size}}</td>
               <td>{{item.last_modified}}</td>
@@ -36,24 +36,30 @@
     </div>
 
     <script type="module">
-        const API_DATA_EXTRACTION_ENDPOINT = 'https://p0dxii3oa7.execute-api.eu-west-2.amazonaws.com/listBucketObjects'
+        const API_DATA_EXTRACTION_ENDPOINT = 'https://p0dxii3oa7.execute-api.eu-west-2.amazonaws.com'
         let items = []
 
-        // const bucketName = import.meta.env.VITE_BUCKET_NAME
-        // console.log(bucketName)
-        // const filePath = import.meta.env.VITE_BUCKET_PATH
-        // console.log(filePath)
         const table = new Vue({
           el: "#app",
           methods: {
-              updateTable: async function (e) {
+              downloadFile: async function(fileName){
+                const signed_url_link = await axios({
+                  method: 'GET',
+                  url: `${API_DATA_EXTRACTION_ENDPOINT}/getSignedURL?bucketName=${encodeURIComponent(this.bucketName)}&fileName=${encodeURIComponent(fileName)}`
+                })
+                //console.log(signed_url_link);
+                const download_link = await axios({
+                  method: 'GET',
+                  url: signed_url_link
+                })
+                window.location.href = download_link.data;
+              },
+              updateTable: async function () {
                   console.log('create table')
                   // Get the presigned URL
-
-                  console.log(`${API_DATA_EXTRACTION_ENDPOINT}?bucketName=${encodeURIComponent(this.bucketName)}&filePath=${encodeURIComponent(this.filePath)}`);
                   const response_data = await axios({
                       method: 'GET',
-                      url: `${API_DATA_EXTRACTION_ENDPOINT}?bucketName=${encodeURIComponent(this.bucketName)}&filePath=${encodeURIComponent(this.filePath)}`
+                      url: `${API_DATA_EXTRACTION_ENDPOINT}/listBucketObjects?bucketName=${encodeURIComponent(this.bucketName)}&filePath=${encodeURIComponent(this.filePath)}`
                   })
                   //console.log('response_data: ', response_data)
                   for( let i in response_data){
@@ -150,7 +156,10 @@
 
         #S3Table tr:nth-child(even){background-color: #f2f2f2;}
 
-        #S3Table tr:hover {background-color: #ddd;}
+        #S3Table tr:hover {
+          background-color: #ddd;
+          color:rgb(4, 0, 255);
+        }
 
         #S3Table th {
           padding-top: 12px;
