@@ -47,8 +47,7 @@
                   method: 'GET',
                   url: `${API_DATA_EXTRACTION_ENDPOINT}/getSignedURL?bucketName=${encodeURIComponent(this.bucketName)}&fileName=${encodeURIComponent(fileName)}`
                 })
-                console.log(signed_url_link);
-                window.open(signed_url_link, "_blank");  
+                window.location.href = JSON.parse(signed_url_link);  
               },
               updateTable: async function () {
                   console.log('create table')
