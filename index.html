@@ -47,12 +47,8 @@
                   method: 'GET',
                   url: `${API_DATA_EXTRACTION_ENDPOINT}/getSignedURL?bucketName=${encodeURIComponent(this.bucketName)}&fileName=${encodeURIComponent(fileName)}`
                 })
-                //console.log(signed_url_link);
-                const download_link = await axios({
-                  method: 'GET',
-                  url: signed_url_link
-                })
-                console.log(download_link.data);
+                console.log(signed_url_link);
+                window.open(signed_url_link, "_blank");  
               },
               updateTable: async function () {
                   console.log('create table')
