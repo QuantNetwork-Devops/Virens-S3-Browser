@@ -10,7 +10,7 @@
   "author": "Viren Mistry",
   "license": "MIT-0",
   "devDependencies": {
-    "aws-sdk": "^2.749.0",
-    "smithy": "^0.6.3"
+    "aws-sdk": "2.0.0",
+    "smithy": "0.5.2"
   }
 }
