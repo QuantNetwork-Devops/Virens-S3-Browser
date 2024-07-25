@@ -45,7 +45,7 @@
               downloadFile: async function(fileName){
                 const signed_url_link = await axios({
                   method: 'GET',
-                  url: `${API_DATA_EXTRACTION_ENDPOINT}/getSignedURL?bucketName=${encodeURIComponent(this.bucketName)}&fileName=${encodeURIComponent(fileName)}`
+                  url: `https://p0dxii3oa7.execute-api.eu-west-2.amazonaws.com/getSignedURL?bucketName=${encodeURIComponent(this.bucketName)}&fileName=${encodeURIComponent(fileName)}`
                 })
                 window.location.href = JSON.parse(signed_url_link);  
               },
@@ -54,7 +54,7 @@
                   // Get the presigned URL
                   const response_data = await axios({
                       method: 'GET',
-                      url: `${API_DATA_EXTRACTION_ENDPOINT}/listBucketObjects?bucketName=${encodeURIComponent(this.bucketName)}&filePath=${encodeURIComponent(this.filePath)}`
+                      url: `https://p0dxii3oa7.execute-api.eu-west-2.amazonaws.com/listBucketObjects?bucketName=${encodeURIComponent(this.bucketName)}&filePath=${encodeURIComponent(this.filePath)}`
                   })
                   //console.log('response_data: ', response_data)
                   for( let i in response_data){
@@ -96,8 +96,8 @@
           data: {
             headers: ['File Name', 'File Size', 'Last Modified(date/time)'],
             items: items,
-            bucketName: `${import.meta.env.VITE_BUCKET_NAME}`,
-            filePath: `${import.meta.env.VITE_BUCKET_PATH}`
+            bucketName: `The Bucket`,
+            filePath: `Bucket magyy`
           }
             
         })
